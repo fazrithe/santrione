@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { AppShell } from "@/components/AppShell";
+import { SiakadProvider } from "@/lib/siakad/store";
+import { ToastProvider } from "@/components/Toast";
 
 export const metadata: Metadata = {
   title: "SantriOne — ERP Pesantren Terpadu",
@@ -12,7 +14,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
       <body className="font-body antialiased">
-        <AppShell>{children}</AppShell>
+        <SiakadProvider>
+          <ToastProvider>
+            <AppShell>{children}</AppShell>
+          </ToastProvider>
+        </SiakadProvider>
       </body>
     </html>
   );

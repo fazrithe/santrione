@@ -85,6 +85,32 @@ state di browser (React Context + `localStorage`), bukan sekadar tabel statis:
   (addStudent, updateStudent, deleteStudent, dst.) sudah didesain agar tinggal diubah
   implementasinya dari `localStorage` menjadi `fetch()`/`prisma`/dsb tanpa mengubah UI.
 
+## Modul Akademik — Kelas & Jadwal (fungsi penuh)
+
+Modul Akademik (`app/akademik`) juga sudah berfungsi penuh dengan pola yang sama
+(React Context + `localStorage` sebagai dummy backend), dengan 5 tab:
+
+- **Kelas** — tambah/ubah/hapus rombongan belajar (nama, tingkatan, wali kelas,
+  kapasitas, tahun ajaran). Setiap kelas punya tombol **"Anggota"** yang membuka
+  pengelola anggota kelas — di sini Anda bisa memindahkan santri antar kelas
+  langsung dari data SIAKAD (lintas modul: mengubah `className` pada data santri).
+- **Tingkatan** — CRUD master tingkatan (`grades`), mis. Kelas 7 s.d. Kelas 12.
+- **Mata Pelajaran** — CRUD daftar mapel (`subjects`) beserta kategori dan jam/minggu.
+- **Penugasan Guru** — CRUD penugasan guru-mapel-kelas (`teacher_subjects`); ini jadi
+  dasar untuk membuat jadwal.
+- **Jadwal Pelajaran** — CRUD jadwal (`schedules`) yang dipilih dari penugasan guru
+  yang sudah dibuat, lengkap hari, jam, dan ruang; bisa difilter per hari.
+
+Data tersimpan di `localStorage` dengan key `santrione:akademik:v1`, terpisah dari
+data SIAKAD tapi saling terhubung lewat fitur "Anggota Kelas". File terkait:
+`lib/akademik/types.ts`, `lib/akademik/seed.ts`, `lib/akademik/store.tsx`,
+`components/akademik/*`.
+
+> Catatan arsitektur: provider `SiakadProvider` dan `ToastProvider` kini dipasang
+> di `app/layout.tsx` (level root), bukan lagi di `app/santri/layout.tsx`, supaya
+> modul lain (seperti Akademik) juga bisa membaca/mengubah data santri untuk
+> fitur lintas modul semacam ini.
+
 ## Catatan
 
 - Logo yang diunggah disalin ke `public/logo.png` dan `app/icon.png` (favicon) — silakan
