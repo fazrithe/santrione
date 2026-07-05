@@ -58,6 +58,33 @@ lib/utils.ts             Helper format mata uang & tanggal
 - Font angka/data: **IBM Plex Mono** — dipakai pada nominal, NIS/NIP, dan kode dokumen
   agar terasa seperti buku besar/registri pesantren.
 
+## Modul SIAKAD — fungsi penuh (CRUD + persistensi lokal)
+
+Modul SIAKAD (`app/santri`) sudah berfungsi penuh sebagai "dummy backend" berbasis
+state di browser (React Context + `localStorage`), bukan sekadar tabel statis:
+
+- **Daftar santri** (`/santri`): pencarian (nama/NIS/NISN), filter kelas/status/jenis
+  kelamin, paginasi, tambah santri baru, edit, hapus (dengan dialog konfirmasi), dan
+  tombol "Reset Demo" untuk mengembalikan ke data contoh awal.
+- **Detail santri** (`/santri/[id]`) dengan 6 tab, masing-masing punya CRUD sendiri:
+  - **Profil** — data identitas lengkap.
+  - **Wali Santri** — tambah/ubah/hapus data orang tua/wali (`student_parents`).
+  - **Dokumen** — tambah/hapus dokumen administrasi (`student_documents`).
+  - **Kesehatan** — tambah/ubah/hapus rekam kesehatan (`student_health_records`).
+  - **Prestasi** — tambah/ubah/hapus prestasi (`student_achievements`).
+  - **Pelanggaran** — tambah/ubah/hapus pelanggaran beserta total poin (`student_violations`).
+- Semua perubahan tersimpan otomatis di `localStorage` browser Anda (key
+  `santrione:siakad:v1`), sehingga bertahan walau halaman di-refresh — cocok untuk
+  demo tanpa perlu database sungguhan. Notifikasi toast muncul setiap kali data
+  berhasil ditambah/diubah/dihapus.
+- File terkait: `lib/siakad/types.ts` (tipe data mengikuti ERD), `lib/siakad/seed.ts`
+  (data awal), `lib/siakad/store.tsx` (context + fungsi CRUD), `components/siakad/*`
+  (form untuk tiap entitas).
+- Untuk versi produksi, ganti isi `lib/siakad/store.tsx` dengan pemanggilan API/ORM
+  ke database PostgreSQL sesuai `erp_pesantren_terpadu.dbml` — bentuk fungsi CRUD-nya
+  (addStudent, updateStudent, deleteStudent, dst.) sudah didesain agar tinggal diubah
+  implementasinya dari `localStorage` menjadi `fetch()`/`prisma`/dsb tanpa mengubah UI.
+
 ## Catatan
 
 - Logo yang diunggah disalin ke `public/logo.png` dan `app/icon.png` (favicon) — silakan

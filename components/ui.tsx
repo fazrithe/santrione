@@ -1,4 +1,9 @@
-import type { ReactNode } from "react";
+import type {
+  ReactNode,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  SelectHTMLAttributes,
+} from "react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -166,6 +171,61 @@ export function ProgressBar({ value, accent = "forest" }: { value: number; accen
         className={cn("h-full rounded-full", accent === "gold" ? "bg-gold-400" : "bg-forest-500")}
         style={{ width: `${Math.min(value, 100)}%` }}
       />
+    </div>
+  );
+}
+
+export function Field({
+  label,
+  hint,
+  required,
+  className,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  required?: boolean;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <label className={cn("block", className)}>
+      <span className="mb-1.5 block text-xs font-medium text-ink/70">
+        {label} {required && <span className="text-red-500">*</span>}
+      </span>
+      {children}
+      {hint && <span className="mt-1 block text-[11px] text-ink/40">{hint}</span>}
+    </label>
+  );
+}
+
+const inputBase =
+  "w-full rounded-lg border border-forest-100 bg-white px-3 py-2 text-sm text-ink placeholder:text-ink/35 focus:border-forest-400 focus:outline-none focus:ring-2 focus:ring-forest-100";
+
+export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
+  const { className, ...rest } = props;
+  return <input className={cn(inputBase, className)} {...rest} />;
+}
+
+export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const { className, ...rest } = props;
+  return <textarea className={cn(inputBase, "min-h-[80px] resize-y", className)} {...rest} />;
+}
+
+export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
+  const { className, children, ...rest } = props;
+  return (
+    <select className={cn(inputBase, "pr-8", className)} {...rest}>
+      {children}
+    </select>
+  );
+}
+
+export function EmptyState({ title, description }: { title: string; description?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-1 px-6 py-10 text-center">
+      <p className="text-sm font-medium text-ink/60">{title}</p>
+      {description && <p className="max-w-sm text-xs text-ink/40">{description}</p>}
     </div>
   );
 }
